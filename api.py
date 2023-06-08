@@ -7,6 +7,7 @@ DEVICE = "cuda"
 DEVICE_ID = "0"
 CUDA_DEVICE = f"{DEVICE}:{DEVICE_ID}" if DEVICE_ID else DEVICE
 
+global model, tokenizer
 tokenizer = AutoTokenizer.from_pretrained("THUDM/chatglm-6b", trust_remote_code=True)
 model = AutoModel.from_pretrained("THUDM/chatglm-6b", trust_remote_code=True).half().cuda()
 model.eval()
@@ -23,7 +24,6 @@ app = FastAPI()
 
 @app.post("/")
 async def create_item(request: Request):
-    global model, tokenizer
     json_post_raw = await request.json()
     json_post = json.dumps(json_post_raw)
     json_post_list = json.loads(json_post)
